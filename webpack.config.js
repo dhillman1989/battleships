@@ -22,6 +22,13 @@ module.exports = {
   module: {
     rules: [
       {
+        loader: "babel-loader",
+        include: [
+          // webpack-dev-server#1090 for Safari
+          /node_modules\/webpack-dev-server/,
+        ],
+      },
+      {
         test: /\.(js|jsx)$/,
         include: [path.resolve(__dirname, "src")],
         loader: "babel-loader",
@@ -50,6 +57,9 @@ module.exports = {
         ],
       },
     ],
+  },
+  resolve: {
+    extensions: [".js", ".jsx", ".scss", ".css"],
   },
 
   devServer: {

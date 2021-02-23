@@ -1,11 +1,21 @@
 {
-    "plugins": ["syntax-dynamic-import"],
     "presets": [
-        [
-            "@babel/preset-env",
-            {
-                "modules": false
-            }
-        ]
+      ["@babel/preset-env", {
+        "modules": false,
+        "targets": {
+          "browsers": "> 1%",
+          "uglify": true
+        },
+        "useBuiltIns": "entry"
+      }],
+      "@babel/preset-flow"
+    ],
+  
+    "plugins": [
+      "transform-react-jsx",
+      "syntax-dynamic-import",
+      "transform-object-rest-spread",
+      "transform-es2015-block-scoped-functions",
+      ["transform-class-properties", { "spec": true }]
     ]
-}
+  }
