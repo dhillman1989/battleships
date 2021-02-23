@@ -1,4 +1,4 @@
-class Gameboard {
+class GameboardFactory {
   constructor() {
     this.grid = [
       [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
@@ -39,4 +39,4 @@ class Gameboard {
   }
 }
 
-module.exports = Gameboard;
+module.exports = GameboardFactory;
