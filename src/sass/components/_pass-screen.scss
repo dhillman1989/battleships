@@ -1,8 +1,20 @@
 .pass-screen {
   background-color: #000;
   position: absolute;
+  display: flex;
   top: 0;
   left: 0;
   width: 100vw;
   height: 100vh;
+  align-items: center;
+  justify-content: center;
+  & button {
+    background-color: #333;
+    border: 0;
+    outline: 0;
+    color: #fff;
+    padding: 2rem 3rem;
+    font-size: 3rem;
+    box-shadow: 2px 2px 2px 2px #111;
+  }
 }

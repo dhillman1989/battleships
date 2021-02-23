@@ -42,7 +42,7 @@ const Game = () => {
             .map(
               (tile, x) =>
                 `<div ${
-                  tile.ship ? `data-ship=${tile.ship}` : null
+                  tile.ship ? `data-ship=${JSON.stringify(tile.ship)}` : null
                 } data-coordx=${x} data-coordy=${y} class="gameboard__grid-tile ${
                   enemyGameboard.attacksList.filter(
                     (a) => a[0] == x && a[1] == y
@@ -60,12 +60,23 @@ const Game = () => {
     const playerBoard = document.querySelector(".gameboard__grid--defending");
     const playerBoardGrid = activeGameboard.grid
       .map(
-        (row, i) =>
+        (row, y) =>
           `<div class="gameboard__grid-row">${row
-            .map((tile) =>
-              tile != 0
-                ? "<div class='gameboard__grid-tile gameboard__grid-occupied'></div>"
-                : "<div class='gameboard__grid-tile'></div>"
+            .map(
+              (tile, x) =>
+                `<div ${
+                  tile.ship ? `data-ship=${tile.ship}` : null
+                } data-coordx=${x} data-coordy=${y} class="gameboard__grid-tile ${
+                  tile != 0 ? "gameboard__grid-occupied" : null
+                } ${
+                  activeGameboard.attacksList.filter(
+                    (a) => a[0] == x && a[1] == y
+                  ).length > 0
+                    ? `gameboard__grid-shot ${
+                        tile.ship && "gameboard__grid-hit"
+                      }`
+                    : null
+                }"></div>`
             )
             .join("")}</div>`
       )
@@ -80,17 +91,27 @@ const Game = () => {
 
     tiles.forEach((tile) =>
       tile.addEventListener("click", (e) => {
-        if (!turnTaken) {
-          turnTaken = true;
+        if (
+          !turnTaken &&
+          enemyGameboard.attacksList.filter(
+            (a) =>
+              a[0] == e.target.dataset.coordx && a[1] == e.target.dataset.coordy
+          ).length == 0
+        ) {
           player1.attack(
             e.target.dataset.coordx,
             e.target.dataset.coordy,
             enemyGameboard
           );
           renderBoards(activeGameboard, enemyGameboard, (turnTaken = true));
-          console.log(e.target.dataset);
+
           e.target.dataset.ship
-            ? Popup("HIT", activeGameboard, enemyGameboard, renderBoards)
+            ? Popup(
+                `${e.target.dataset.ship.isSunk ? "SANK SHIP" : "HIT"}`,
+                activeGameboard,
+                enemyGameboard,
+                renderBoards
+              )
             : Popup("MISS", activeGameboard, enemyGameboard, renderBoards);
         }
       })
