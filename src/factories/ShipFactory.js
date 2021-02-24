@@ -1,5 +1,6 @@
 class ShipFactory {
-  constructor(id, axis, length) {
+  constructor(id, axis, length, player) {
+    this.owner = player;
     this.id = id;
     this.axis = axis;
     this.length = length;
@@ -9,6 +10,7 @@ class ShipFactory {
       this.hitPoints.push(num);
       if (this.hitPoints.length === this.length) {
         this.isSunk = true;
+        this.owner.sunkenShips.push(this.id);
       }
     };
   }

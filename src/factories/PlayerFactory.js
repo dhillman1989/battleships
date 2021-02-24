@@ -4,6 +4,7 @@ class PlayerFactory {
   constructor(type = "human") {
     this.type = type;
     this.fleet = [...fleet];
+    this.sunkenShips = [];
     this.attack = (x, y, enemyboard) => {
       enemyboard.receiveAttack(x, y);
     };

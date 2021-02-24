@@ -1,5 +1,6 @@
 class GameboardFactory {
-  constructor() {
+  constructor(player) {
+    this.owner = player;
     this.grid = [
       [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
       [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
