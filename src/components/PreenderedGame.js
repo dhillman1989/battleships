@@ -12,6 +12,13 @@ const Game = () => {
   const ship3 = new ShipFactory("ship384534588834", "horizontal", 4, player1);
   const ship4 = new ShipFactory("ship3888834", "horizontal", 1, player1);
   const ship5 = new ShipFactory("ship38833333333334", "horizontal", 3, player1);
+  ///player1 places ships on board 1
+  gameboard1.placeShip(ship1, 3, 3);
+  gameboard1.placeShip(ship2, 0, 0);
+  gameboard1.setAxis("horizontal");
+  gameboard1.placeShip(ship3, 6, 3);
+  gameboard1.placeShip(ship4, 5, 5);
+  gameboard1.placeShip(ship5, 6, 8);
 
   ///player2 places ships on board 2
   const player2 = new PlayerFactory();
@@ -26,65 +33,12 @@ const Game = () => {
     3,
     player2
   );
-
-  const renderSetupBoard = (currGameboard) => {
-    const setupBoard = document.querySelector(".gameboard__grid--defending");
-    const setupBoardGrid = currGameboard.grid
-      .map(
-        (row, y) =>
-          `<div class="gameboard__grid-row">${row
-            .map(
-              (tile, x) =>
-                `<div ${
-                  tile.ship ? `data-ship=${tile.ship}` : null
-                } data-coordx=${x} data-coordy=${y} class="gameboard__grid-tile ${
-                  tile != 0 ? "gameboard__grid-occupied" : null
-                } ${
-                  currGameboard.attacksList.filter(
-                    (a) => a[0] == x && a[1] == y
-                  ).length > 0
-                    ? `gameboard__grid-shot ${
-                        tile.ship && "gameboard__grid-hit"
-                      }`
-                    : null
-                }"></div>`
-            )
-            .join("")}</div>`
-      )
-      .join("");
-
-    ///RENDER setup grid to dom
-    setupBoard.innerHTML = setupBoardGrid;
-    //add eventListners to setup Grid
-
-    const keyevent = (e) => {
-      if (e.keyCode === 32) {
-        if (currGameboard.axis == "vertical") {
-          currGameboard.setAxis("horizontal");
-        } else if (currGameboard.axis == "horizontal") {
-          currGameboard.setAxis("vertical");
-        }
-        console.log(currGameboard);
-      }
-      document.removeEventListener("keypress", keyevent, false);
-      console.log("removed lsitener");
-    };
-
-    document.addEventListener("keypress", keyevent);
-
-    const tiles = document.querySelectorAll(".gameboard__grid-tile");
-    tiles.forEach((t) =>
-      t.addEventListener("click", (e) => {
-        console.log(currGameboard);
-        currGameboard.placeShip(
-          ship1,
-          parseInt(e.target.dataset.coordx),
-          parseInt(e.target.dataset.coordy)
-        );
-        renderSetupBoard(gameboard1);
-      })
-    );
-  };
+  gameboard2.placeShip(ship21, 0, 0);
+  gameboard2.placeShip(ship22, 2, 2);
+  gameboard2.setAxis("horizontal");
+  gameboard2.placeShip(ship23, 3, 5);
+  gameboard2.placeShip(ship24, 7, 1);
+  gameboard2.placeShip(ship25, 2, 8);
 
   ///map gameboard to UI
   const renderBoards = (activeGameboard, enemyGameboard, turnTaken = false) => {
@@ -181,9 +135,7 @@ const Game = () => {
       })
     );
   };
-
-  renderSetupBoard(gameboard1);
-  ///renderBoards(gameboard1, gameboard2);
+  renderBoards(gameboard1, gameboard2);
 };
 
 export default Game;
