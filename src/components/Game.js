@@ -64,13 +64,10 @@ const Game = () => {
         } else if (currGameboard.axis == "horizontal") {
           currGameboard.setAxis("vertical");
         }
-        console.log(currGameboard);
       }
-      document.removeEventListener("keypress", keyevent, false);
-      console.log("removed lsitener");
     };
 
-    document.addEventListener("keypress", keyevent);
+    document.addEventListener("keydown", keyevent);
 
     const tiles = document.querySelectorAll(".gameboard__grid-tile");
     tiles.forEach((t) =>
@@ -82,6 +79,7 @@ const Game = () => {
           parseInt(e.target.dataset.coordy)
         );
         renderSetupBoard(gameboard1);
+        document.removeEventListener("keydown", keyevent);
       })
     );
   };
