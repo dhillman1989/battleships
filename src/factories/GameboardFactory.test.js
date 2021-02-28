@@ -74,12 +74,6 @@ it("test full ship layout", () => {
   const b2 = new ShipFactory("b2", 3);
   gameboard.placeShip(b2, 2, 3);
 
-  const b10 = new ShipFactory("b10", 3);
-  gameboard.placeShip(b10, 3, 7);
-
-  const b5 = new ShipFactory("b5", 2);
-  gameboard.placeShip(b5, 5, 7);
-
   const b7 = new ShipFactory("b7", 1);
   gameboard.placeShip(b7, 7, 9);
 
@@ -91,17 +85,8 @@ it("test full ship layout", () => {
   const b4 = new ShipFactory("b4", 2);
   gameboard.placeShip(b4, 5, 8);
 
-  const b6 = new ShipFactory("b6", 1);
-  gameboard.placeShip(b6, 6, 5);
-
-  const b8 = new ShipFactory("b8", 1);
-  gameboard.placeShip(b8, 8, 3);
-
-  const b9 = new ShipFactory("b9", 1);
-  gameboard.placeShip(b9, 8, 5);
-
-  //test a single square ship
-  expect(gameboard.grid[5][6].ship).toEqual(b6);
+  //test 1 square
+  expect(gameboard.grid[9][7].ship).toEqual(b7);
 
   //test a longer ship vertical
   expect(gameboard.grid[2][3].ship).toEqual(b3);
@@ -111,6 +96,25 @@ it("test full ship layout", () => {
   //test a longer ship horizontal
   expect(gameboard.grid[8][5].ship).toEqual(b4);
   expect(gameboard.grid[8][6].ship).toEqual(b4);
+});
+
+it("ships should not be placed where they will overlap", () => {
+  const player = new PlayerFactory();
+  const gameboard = new GameboardFactory(player);
+
+  const b1 = new ShipFactory("b1", 1);
+  gameboard.placeShip(b1, 1, 1);
+
+  const b2 = new ShipFactory("b2", 3);
+  gameboard.placeShip(b2, 1, 0);
+
+  //test 1 square
+  expect(gameboard.grid[1][1].ship).toEqual(b1);
+
+  //check that ship has not overlapped
+  expect(gameboard.grid[0][1].ship).toEqual(undefined);
+  expect(gameboard.grid[1][1].ship).toEqual(b1);
+  expect(gameboard.grid[2][1].ship).toEqual(undefined);
 });
 
 it("play with opponent", () => {

@@ -34,16 +34,19 @@ class GameboardFactory {
             this.grid[y + i][x] = { ship, num: 1 + i };
           }
         }
-      }
-      if (this.axis === "horizontal") {
+      } else if (this.axis === "horizontal") {
         for (let i = 0; i < ship.length; i++) {
           if (this.grid[y][x + i] !== 0) {
             spaceClear = false;
           }
         }
-        for (let i = 0; i < ship.length; i++) {
-          this.grid[y][x + i] = { ship, num: 1 + i };
+        if (spaceClear) {
+          for (let i = 0; i < ship.length; i++) {
+            this.grid[y][x + i] = { ship, num: 1 + i };
+          }
         }
+      } else {
+        return false;
       }
     };
     this.attacksList = [];
