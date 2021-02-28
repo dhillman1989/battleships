@@ -18,12 +18,29 @@ class GameboardFactory {
       this.axis = newAxis;
     };
     this.placeShip = (ship, x, y) => {
+      let spaceClear = true;
+
       if (this.axis === "vertical") {
+        ///check all needed spaces are clear
         for (let i = 0; i < ship.length; i++) {
-          this.grid[y + i][x] = { ship, num: 1 + i };
+          if (this.grid[y + i][x] !== 0) {
+            spaceClear = false;
+          }
+        }
+
+        // if clear place ship
+        if (spaceClear) {
+          for (let i = 0; i < ship.length; i++) {
+            this.grid[y + i][x] = { ship, num: 1 + i };
+          }
         }
       }
       if (this.axis === "horizontal") {
+        for (let i = 0; i < ship.length; i++) {
+          if (this.grid[y][x + i] !== 0) {
+            spaceClear = false;
+          }
+        }
         for (let i = 0; i < ship.length; i++) {
           this.grid[y][x + i] = { ship, num: 1 + i };
         }

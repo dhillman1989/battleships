@@ -1,8 +1,8 @@
 class ShipFactory {
-  constructor(id, axis, length, player) {
+  constructor(id, length, player) {
     this.owner = player;
     this.id = id;
-    this.axis = axis;
+
     this.length = length;
     this.hitPoints = [];
     this.isSunk = false;

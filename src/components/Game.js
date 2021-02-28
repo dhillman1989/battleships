@@ -7,25 +7,25 @@ import Popup from "./Popup";
 const Game = () => {
   const player1 = new PlayerFactory();
   const gameboard1 = new GameboardFactory(player1);
-  const ship1 = new ShipFactory("ship34234", "vertical", 3, player1);
-  const ship2 = new ShipFactory("ship3454354356234234", "vertical", 2, player1);
-  const ship3 = new ShipFactory("ship384534588834", "horizontal", 4, player1);
-  const ship4 = new ShipFactory("ship3888834", "horizontal", 1, player1);
-  const ship5 = new ShipFactory("ship38833333333334", "horizontal", 3, player1);
+
+  let ships = [
+    new ShipFactory("longboat", 4, player1),
+    new ShipFactory("longboat2", 3, player1),
+    new ShipFactory("longboat2", 3, player1),
+    new ShipFactory("longboat2", 2, player1),
+    new ShipFactory("longboat2", 2, player1),
+    new ShipFactory("longboat2", 2, player1),
+    new ShipFactory("longboat2", 1, player1),
+    new ShipFactory("longboat2", 1, player1),
+    new ShipFactory("longboat2", 1, player1),
+    new ShipFactory("longboat2", 1, player1),
+  ];
+
+  let currShip = ships.shift();
 
   ///player2 places ships on board 2
   const player2 = new PlayerFactory();
   const gameboard2 = new GameboardFactory(player2);
-  const ship21 = new ShipFactory("ship34234", "vertical", 3, player2);
-  const ship22 = new ShipFactory("ship3456234234", "vertical", 2, player2);
-  const ship23 = new ShipFactory("ship3888834", "horizontal", 4, player2);
-  const ship24 = new ShipFactory("ship388fd4534534", "horizontal", 1, player2);
-  const ship25 = new ShipFactory(
-    "ship38833333333334",
-    "horizontal",
-    3,
-    player2
-  );
 
   const renderSetupBoard = (currGameboard) => {
     const setupBoard = document.querySelector(".gameboard__grid--defending");
@@ -74,10 +74,11 @@ const Game = () => {
       t.addEventListener("click", (e) => {
         console.log(currGameboard);
         currGameboard.placeShip(
-          ship1,
+          currShip,
           parseInt(e.target.dataset.coordx),
           parseInt(e.target.dataset.coordy)
         );
+        currShip = ships.shift();
         renderSetupBoard(gameboard1);
         document.removeEventListener("keydown", keyevent);
       })
