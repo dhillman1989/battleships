@@ -7,26 +7,38 @@ import Popup from "./Popup";
 const Game = () => {
   const player1 = new PlayerFactory();
   const gameboard1 = new GameboardFactory(player1);
+  let currShipMarker = 0;
 
-  let ships = [
-    new ShipFactory("longboat0", 4, player1),
-    new ShipFactory("longboat1", 3, player1),
-    new ShipFactory("longboat2", 3, player1),
-    new ShipFactory("longboat3", 2, player1),
-    new ShipFactory("longboat4", 2, player1),
-    new ShipFactory("longboat5", 2, player1),
-    new ShipFactory("longboat6", 1, player1),
-    new ShipFactory("longboat7", 1, player1),
-    new ShipFactory("longboat8", 1, player1),
-    new ShipFactory("longboat9", 1, player1),
+  let ships_p1 = [
+    new ShipFactory("boat0", 4, player1),
+    new ShipFactory("boat1", 3, player1),
+    new ShipFactory("boat2", 3, player1),
+    new ShipFactory("boat3", 2, player1),
+    new ShipFactory("boat4", 2, player1),
+    new ShipFactory("boat5", 2, player1),
+    new ShipFactory("boat6", 1, player1),
+    new ShipFactory("boat7", 1, player1),
+    new ShipFactory("boat8", 1, player1),
+    new ShipFactory("boat9", 1, player1),
   ];
 
   ///player2 places ships on board 2
   const player2 = new PlayerFactory();
   const gameboard2 = new GameboardFactory(player2);
-  let currShipMarker = 0;
+  let ships_p2 = [
+    new ShipFactory("boat21", 4, player2),
+    new ShipFactory("boat22", 3, player2),
+    new ShipFactory("boat23", 3, player2),
+    new ShipFactory("boat24", 2, player2),
+    new ShipFactory("boat24", 2, player2),
+    new ShipFactory("boat25", 2, player2),
+    new ShipFactory("boat26", 1, player2),
+    new ShipFactory("boat27", 1, player2),
+    new ShipFactory("boat28", 1, player2),
+    new ShipFactory("boat29", 1, player2),
+  ];
 
-  const renderSetupBoard = (currGameboard) => {
+  const renderSetupBoard = (currGameboard, shipsSet) => {
     const setupBoard = document.querySelector(".gameboard__grid--defending");
     const setupBoardGrid = currGameboard.grid
       .map(
@@ -54,6 +66,22 @@ const Game = () => {
 
     ///RENDER setup grid to dom
     setupBoard.innerHTML = setupBoardGrid;
+    const gameboard = document.querySelector(".gameboard");
+    const setupPassButton = document.createElement("button");
+    setupPassButton.innerText = "Click & Pass";
+    currShipMarker == 10 && gameboard.appendChild(setupPassButton);
+    setupPassButton.addEventListener("click", () => {
+      currShipMarker = 0;
+      gameboard.removeChild(setupPassButton);
+      if (currGameboard == gameboard2) {
+        document
+          .querySelector(".gameboard__grid--attacking")
+          .classList.remove("hidden");
+        renderBoards(gameboard1, gameboard2);
+      } else {
+        renderSetupBoard(gameboard2, ships_p2);
+      }
+    });
     //add eventListners to setup Grid
 
     const keyevent = (e) => {
@@ -74,17 +102,19 @@ const Game = () => {
       t.addEventListener("click", (e) => {
         console.log(currGameboard);
         currGameboard.placeShip(
-          ships[currShipMarker],
+          shipsSet[currShipMarker],
           parseInt(e.target.dataset.coordx),
           parseInt(e.target.dataset.coordy)
         );
 
-        console.log(ships[currShipMarker].id);
+        console.log(shipsSet[currShipMarker].id);
         var tilesArray = Array.prototype.slice.call(tiles);
         if (
           tilesArray.some((t) => {
-            let shipData = t.dataset.ship ? t.dataset.ship : null;
-            if (shipData && shipData.id == ships[currShipMarker].id) {
+            if (
+              t.dataset.ship &&
+              t.dataset.ship.id == shipsSet[currShipMarker].id
+            ) {
               return true;
             }
             return true;
@@ -93,7 +123,7 @@ const Game = () => {
           currShipMarker = currShipMarker + 1;
         }
         console.log(currShipMarker);
-        renderSetupBoard(gameboard1);
+        renderSetupBoard(currGameboard, shipsSet);
         document.removeEventListener("keydown", keyevent);
       })
     );
@@ -195,8 +225,8 @@ const Game = () => {
     );
   };
 
-  renderSetupBoard(gameboard1);
-  ///renderBoards(gameboard1, gameboard2);
+  renderSetupBoard(gameboard1, ships_p1);
+  ///renderBoards(gameboard1)
 };
 
 export default Game;
