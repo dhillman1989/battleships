@@ -47,7 +47,7 @@ const Game = () => {
             .map(
               (tile, x) =>
                 `<div ${
-                  tile.ship ? `data-ship=${tile.ship}` : null
+                  tile.ship ? `data-ship=${JSON.stringify(tile.ship)}` : null
                 } data-coordx=${x} data-coordy=${y} class="gameboard__grid-tile ${
                   tile != 0 ? "gameboard__grid-occupied" : null
                 } ${
@@ -69,7 +69,7 @@ const Game = () => {
     const gameboard = document.querySelector(".gameboard");
     const setupPassButton = document.createElement("button");
     setupPassButton.innerText = "Click & Pass";
-    currShipMarker == 10 && gameboard.appendChild(setupPassButton);
+    currShipMarker == 9 && gameboard.appendChild(setupPassButton);
     setupPassButton.addEventListener("click", () => {
       currShipMarker = 0;
       gameboard.removeChild(setupPassButton);
@@ -98,6 +98,16 @@ const Game = () => {
 
     const tiles = document.querySelectorAll(".gameboard__grid-tile");
 
+    var tilesArray = Array.prototype.slice.call(tiles);
+    tilesArray.some((t) => {
+      return (
+        t.dataset.ship &&
+        JSON.parse(t.dataset.ship).id == shipsSet[currShipMarker].id
+      );
+    })
+      ? (currShipMarker += 1)
+      : (currShipMarker = currShipMarker);
+
     tiles.forEach((t) =>
       t.addEventListener("click", (e) => {
         console.log(currGameboard);
@@ -107,21 +117,6 @@ const Game = () => {
           parseInt(e.target.dataset.coordy)
         );
 
-        console.log(shipsSet[currShipMarker].id);
-        var tilesArray = Array.prototype.slice.call(tiles);
-        if (
-          tilesArray.some((t) => {
-            if (
-              t.dataset.ship &&
-              t.dataset.ship.id == shipsSet[currShipMarker].id
-            ) {
-              return true;
-            }
-            return true;
-          })
-        ) {
-          currShipMarker = currShipMarker + 1;
-        }
         console.log(currShipMarker);
         renderSetupBoard(currGameboard, shipsSet);
         document.removeEventListener("keydown", keyevent);
