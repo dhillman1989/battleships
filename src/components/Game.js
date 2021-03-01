@@ -9,23 +9,22 @@ const Game = () => {
   const gameboard1 = new GameboardFactory(player1);
 
   let ships = [
-    new ShipFactory("longboat", 4, player1),
+    new ShipFactory("longboat0", 4, player1),
+    new ShipFactory("longboat1", 3, player1),
     new ShipFactory("longboat2", 3, player1),
-    new ShipFactory("longboat2", 3, player1),
-    new ShipFactory("longboat2", 2, player1),
-    new ShipFactory("longboat2", 2, player1),
-    new ShipFactory("longboat2", 2, player1),
-    new ShipFactory("longboat2", 1, player1),
-    new ShipFactory("longboat2", 1, player1),
-    new ShipFactory("longboat2", 1, player1),
-    new ShipFactory("longboat2", 1, player1),
+    new ShipFactory("longboat3", 2, player1),
+    new ShipFactory("longboat4", 2, player1),
+    new ShipFactory("longboat5", 2, player1),
+    new ShipFactory("longboat6", 1, player1),
+    new ShipFactory("longboat7", 1, player1),
+    new ShipFactory("longboat8", 1, player1),
+    new ShipFactory("longboat9", 1, player1),
   ];
-
-  let currShip = ships.shift();
 
   ///player2 places ships on board 2
   const player2 = new PlayerFactory();
   const gameboard2 = new GameboardFactory(player2);
+  let currShipMarker = 0;
 
   const renderSetupBoard = (currGameboard) => {
     const setupBoard = document.querySelector(".gameboard__grid--defending");
@@ -70,15 +69,30 @@ const Game = () => {
     document.addEventListener("keydown", keyevent);
 
     const tiles = document.querySelectorAll(".gameboard__grid-tile");
+
     tiles.forEach((t) =>
       t.addEventListener("click", (e) => {
         console.log(currGameboard);
         currGameboard.placeShip(
-          currShip,
+          ships[currShipMarker],
           parseInt(e.target.dataset.coordx),
           parseInt(e.target.dataset.coordy)
         );
-        currShip = ships.shift();
+
+        console.log(ships[currShipMarker].id);
+        var tilesArray = Array.prototype.slice.call(tiles);
+        if (
+          tilesArray.some((t) => {
+            let shipData = t.dataset.ship ? t.dataset.ship : null;
+            if (shipData && shipData.id == ships[currShipMarker].id) {
+              return true;
+            }
+            return true;
+          })
+        ) {
+          currShipMarker = currShipMarker + 1;
+        }
+        console.log(currShipMarker);
         renderSetupBoard(gameboard1);
         document.removeEventListener("keydown", keyevent);
       })

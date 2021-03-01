@@ -19,7 +19,6 @@ class GameboardFactory {
     };
     this.placeShip = (ship, x, y) => {
       let spaceClear = true;
-
       if (this.axis === "vertical") {
         ///check all needed spaces are clear
         for (let i = 0; i < ship.length; i++) {
@@ -45,8 +44,6 @@ class GameboardFactory {
             this.grid[y][x + i] = { ship, num: 1 + i };
           }
         }
-      } else {
-        return false;
       }
     };
     this.attacksList = [];
