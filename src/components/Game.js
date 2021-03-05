@@ -5,10 +5,12 @@ import ShipFactory from "../factories/ShipFactory";
 import Popup from "./Popup";
 
 const Game = () => {
+  //CREATE PLAYER 1 AND BOARD 1
   const player1 = new PlayerFactory();
   const gameboard1 = new GameboardFactory(player1);
   let currShipMarker = 0;
 
+  //PLAYER 1  SHIPS ARRAY
   let ships_p1 = [
     new ShipFactory("boat0", 4, player1),
     new ShipFactory("boat1", 3, player1),
@@ -22,9 +24,11 @@ const Game = () => {
     new ShipFactory("boat9", 1, player1),
   ];
 
-  ///player2 places ships on board 2
+  ///CREATE PLAYER 2 AND BOARD 2
   const player2 = new PlayerFactory();
   const gameboard2 = new GameboardFactory(player2);
+
+  //PLAYER 2 SHIPS ARRAY
   let ships_p2 = [
     new ShipFactory("boat21", 4, player2),
     new ShipFactory("boat22", 3, player2),
@@ -38,6 +42,7 @@ const Game = () => {
     new ShipFactory("boat29", 1, player2),
   ];
 
+  ///RENDER BOARDS FOR PLAYER TO PLACE THEIR SHIPS
   const renderSetupBoard = (currGameboard, shipsSet) => {
     const setupBoard = document.querySelector(".gameboard__grid--defending");
     const setupBoardGrid = currGameboard.grid
@@ -82,19 +87,54 @@ const Game = () => {
         renderSetupBoard(gameboard2, ships_p2);
       }
     });
-    //add eventListners to setup Grid
 
-    const keyevent = (e) => {
+    //remove existing piece preview if it exists before creating new piece preview
+    const createPiecePreview = () => {
+      const existingPiece = document.querySelector("#currPiece");
+      existingPiece &&
+        document.querySelector(".gameboard").removeChild(existingPiece);
+
+      ///create piece preview window
+      const piece = document.createElement("div");
+      piece.id = "currPiece";
+      piece.classList.add("gameboard__grid-row");
+      piece.classList.add("piece");
+      currGameboard.axis === "horizontal" &&
+        piece.classList.add("piece--horizontal");
+
+      ///populate preview window with appropriate preview
+      console.log(shipsSet[currShipMarker].length);
+      for (let i = 0; i < shipsSet[currShipMarker].length; i++) {
+        console.log(shipsSet[currShipMarker].length);
+        const tile = document.createElement("div");
+        tile.classList.add("gameboard__grid-tile");
+        tile.classList.add("gameboard__grid-occupied");
+        piece.appendChild(tile);
+      }
+
+      //add preview piece to DOM
+      document.querySelector(".gameboard").appendChild(piece);
+    };
+
+    //AXIS SWITCH FUNCTION
+    const switchAxis = (e) => {
       if (e.keyCode === 32) {
         if (currGameboard.axis == "vertical") {
           currGameboard.setAxis("horizontal");
+          document
+            .querySelector("#currPiece")
+            .classList.add("piece--horizontal");
         } else if (currGameboard.axis == "horizontal") {
           currGameboard.setAxis("vertical");
+          document
+            .querySelector("#currPiece")
+            .classList.remove("piece--horizontal");
         }
       }
     };
 
-    document.addEventListener("keydown", keyevent);
+    ///register axis switch event
+    document.addEventListener("keydown", switchAxis);
 
     const tiles = document.querySelectorAll(".gameboard__grid-tile");
 
@@ -108,6 +148,10 @@ const Game = () => {
       ? (currShipMarker += 1)
       : (currShipMarker = currShipMarker);
 
+    ///RUN PIECE PREVIEW FUNCTION
+    createPiecePreview();
+
+    ///ADD EVENT LISTENERS  TO PLACE SHIPS
     tiles.forEach((t) =>
       t.addEventListener("click", (e) => {
         console.log(currGameboard);
@@ -119,7 +163,9 @@ const Game = () => {
 
         console.log(currShipMarker);
         renderSetupBoard(currGameboard, shipsSet);
-        document.removeEventListener("keydown", keyevent);
+
+        //remove event switch axis listener
+        document.removeEventListener("keydown", switchAxis);
       })
     );
   };
@@ -197,7 +243,7 @@ const Game = () => {
           );
           renderBoards(activeGameboard, enemyGameboard, (turnTaken = true));
 
-          if (enemyGameboard.owner.sunkenShips.length == 5) {
+          if (enemyGameboard.owner.sunkenShips.length == 10) {
             return Popup("OPPONENT ANIHALATED, YOU WIN!");
           }
 
